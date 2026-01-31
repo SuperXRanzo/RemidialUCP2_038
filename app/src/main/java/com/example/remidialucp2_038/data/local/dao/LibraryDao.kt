@@ -27,12 +27,19 @@ interface LibraryDao {
     @Query("UPDATE books SET isDeleted = 1 WHERE categoryId = :categoryId")
     suspend fun softDeleteBooksByCategory(categoryId: Int)
 
+    @Query("SELECT * FROM categories")
+    fun getAllCategoriesList(): List<CategoryEntity>
+
+    @Insert
+    fun insertBook(book: BookEntity): Long
+
+    @Insert
+    fun insertPhysicalBook(phys: PhysicalBookEntity)
     @Query("""
         SELECT COUNT(*) FROM physical_books 
         WHERE bookId IN (:bookIds) AND status = 'DIPINJAM'
     """)
     suspend fun countBorrowedBooks(bookIds: List<Int>): Int
-
     @Insert
     suspend fun insertAudit(log: AuditLogEntity)
 }
